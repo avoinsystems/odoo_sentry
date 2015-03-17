@@ -27,7 +27,7 @@
     'summary': 'Exceptions tracker',
     'description':
         """
-Provide a pluggable base to connect Odoo with Sentry.
+Provide a pluggable base to connect Odoo with Sentry
 ====================================================
 
         """,
