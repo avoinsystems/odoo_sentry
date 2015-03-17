@@ -35,7 +35,7 @@ from raven.handlers.logging import SentryHandler
 from raven.middleware import Sentry
 from raven.conf import setup_logging, EXCLUDE_LOGGER_DEFAULTS
 
-
+# Do NOT use the logger. It will create an endless recursion loop.
 _logger = logging.getLogger(__name__)
 
 
@@ -49,15 +49,20 @@ def get_user_context():
         get the current user context, if possible
     '''
     cxt = {}
-    session = getattr(request, 'session', {})
-    cxt.update({
-        'session': {
-            'context': session.get('context', {}),
-            'db': session.get('db', None),
-            'login': session.get('login', None),
-            'password': session.get('uid', None),
-        },
-    })
+    try:
+        session = getattr(request, 'session', {})
+        cxt.update({
+            'session': {
+                'context': session.get('context', {}),
+                'db': session.get('db', None),
+                'login': session.get('login', None),
+                'password': session.get('uid', None),
+            }
+        })
+    except:
+        # Don't care. It's most likely a cron job.
+        pass    
+
     return cxt
 
 
