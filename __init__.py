@@ -35,7 +35,7 @@ from raven.handlers.logging import SentryHandler
 from raven.middleware import Sentry
 from raven.conf import setup_logging, EXCLUDE_LOGGER_DEFAULTS
 
-
+# Do NOT use the logger. It will create an endless recursion loop.
 _logger = logging.getLogger(__name__)
 
 
