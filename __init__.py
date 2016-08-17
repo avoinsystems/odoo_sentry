@@ -43,6 +43,7 @@ CLIENT_DSN = config.get('sentry_client_dsn', '').strip()
 ENABLE_LOGGING = config.get('sentry_enable_logging', False)
 ALLOW_ORM_WARNING = config.get('sentry_allow_orm_warning', False)
 INCLUDE_USER_CONTEXT = config.get('sentry_include_context', False)
+ERROR_LEVEL = config.get('sentry_error_level', 'WARNING')
 
 def get_user_context():
     '''
@@ -98,7 +99,7 @@ client = Client(CLIENT_DSN)
 if ENABLE_LOGGING:
     # future enhancement: add exclude loggers option
     EXCLUDE_LOGGER_DEFAULTS += ('werkzeug', )
-    handler = ContextSentryHandler(client)
+    handler = ContextSentryHandler(client, level=getattr(logging, ERROR_LEVEL))
     setup_logging(handler, exclude=EXCLUDE_LOGGER_DEFAULTS)
 
 if ALLOW_ORM_WARNING:
