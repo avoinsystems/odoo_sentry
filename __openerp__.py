@@ -3,6 +3,7 @@
 #
 #    Odoo - Sentry connector
 #    Copyright (C) 2014 Mohammed Barsi.
+#    Copyright (C) 2016 Miku Laitinen (avoin.systems).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
