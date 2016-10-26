@@ -22,14 +22,14 @@
 import traceback
 import logging
 import sys
-import openerp.service.wsgi_server
-import openerp.addons.web.controllers.main
-import openerp.addons.report.controllers.main
-import openerp.http
-import openerp.tools.config as config
-import openerp.osv.osv
-import openerp.exceptions
-from openerp.http import request
+import odoo.service.wsgi_server
+import odoo.addons.web.controllers.main
+import odoo.addons.report.controllers.main
+import odoo.http
+import odoo.tools.config as config
+import odoo.osv.osv
+import odoo.exceptions
+from odoo.http import request
 from raven import Client
 from raven.handlers.logging import SentryHandler
 from raven.middleware import Sentry
@@ -66,19 +66,19 @@ def get_user_context():
 
 def serialize_exception(e):
     '''
-        overrides `openerp.http.serialize_exception`
+        overrides `odoo.http.serialize_exception`
         in order to log orm exceptions.
     '''
     if isinstance(e, (
-        openerp.osv.osv.except_osv,
-        openerp.exceptions.Warning,
-        openerp.exceptions.AccessError,
-        openerp.exceptions.AccessDenied,
+        odoo.osv.osv.except_osv,
+        odoo.exceptions.Warning,
+        odoo.exceptions.AccessError,
+        odoo.exceptions.AccessDenied,
         )):
         if INCLUDE_USER_CONTEXT:
             client.extra_context(get_user_context())
         client.captureException(sys.exc_info())
-    return openerp.http.serialize_exception(e)
+    return odoo.http.serialize_exception(e)
 
 
 class ContextSentryHandler(SentryHandler):
@@ -103,11 +103,11 @@ if ENABLE_LOGGING:
     setup_logging(handler, exclude=EXCLUDE_LOGGER_DEFAULTS)
 
 if ALLOW_ORM_WARNING:
-    openerp.addons.web.controllers.main._serialize_exception = serialize_exception
-    openerp.addons.report.controllers.main._serialize_exception = serialize_exception
+    odoo.addons.web.controllers.main._serialize_exception = serialize_exception
+    odoo.addons.report.controllers.main._serialize_exception = serialize_exception
 
 # wrap the main wsgi app
-openerp.service.wsgi_server.application = Sentry(openerp.service.wsgi_server.application, client=client)
+odoo.service.wsgi_server.application = Sentry(odoo.service.wsgi_server.application, client=client)
 
 if INCLUDE_USER_CONTEXT:
     client.extra_context(get_user_context())

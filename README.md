@@ -1,6 +1,6 @@
 # Odoo Sentry connector
 
-an Odoo V8.0 module that connects your odoo deployment with [sentry](https://www.getsentry.com)
+an Odoo v10.0 module that connects your odoo deployment with [sentry](https://www.getsentry.com)
 
 ![Screen shot](screenshot.png?raw=true "Sample Screen")
 
@@ -26,8 +26,8 @@ Other options are available to extends log level details ([odoo-sentry-sample.co
 - `sentry_enable_logging`: *default `false`*. set it to true will capture all logging that are logged through python standard logging module.
 - `sentry_allow_orm_warning`: *default `false`*. enabling this will capture Odoo's warning exceptions (e.g. `except_osv`, `openerp.exceptions.Warning`).
 - `sentry_include_context`: *default `false`*. this will add details about the odoo user that triggers specific event, plus database name, will displayed in Sentry additional info.
-
+- `sentry_error_level`: *default `warning`*. select the minimum logging level that should be propagated to Sentry.
 
 ### License
-This project is licensed under [AGPL v3](http://www.gnu.org/licenses/agpl-3.0.html) (the same as odoo).
+This project is licensed under [AGPL v3](http://www.gnu.org/licenses/agpl-3.0.html).
 
