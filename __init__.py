@@ -45,11 +45,13 @@ ENABLE_LOGGING = config.get('sentry_enable_logging', False)
 ALLOW_ORM_WARNING = config.get('sentry_allow_orm_warning', False)
 INCLUDE_USER_CONTEXT = config.get('sentry_include_context', False)
 ERROR_LEVEL = config.get('sentry_error_level', 'WARNING')
+ENVIRONMENT = config.get('sentry_options_environment', False)
+
 
 def get_user_context():
-    '''
+    """
         get the current user context, if possible
-    '''
+    """
     cxt = {}
     if not request:
         return cxt
@@ -66,10 +68,10 @@ def get_user_context():
 
 
 def serialize_exception(e):
-    '''
+    """
         overrides `odoo.http.serialize_exception`
         in order to log orm exceptions.
-    '''
+    """
     if isinstance(e, (
         odoo.osv.osv.except_osv,
         odoo.exceptions.Warning,
@@ -83,18 +85,20 @@ def serialize_exception(e):
 
 
 class ContextSentryHandler(SentryHandler):
-    '''
-        extends SentryHandler, to capture logs only if 
+    """
+        extends SentryHandler, to capture logs only if
         `sentry_enable_logging` config options set to true
-    '''
+    """
     def emit(self, rec):
         if INCLUDE_USER_CONTEXT:
             client.extra_context(get_user_context())
         super(ContextSentryHandler, self).emit(rec)
 
+options = {}
+if ENVIRONMENT:
+    options['environment'] = ENVIRONMENT
 
-
-client = Client(CLIENT_DSN)
+client = Client(CLIENT_DSN, **options)
 
 
 if ENABLE_LOGGING:
