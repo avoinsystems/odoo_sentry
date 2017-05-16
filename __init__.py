@@ -47,7 +47,7 @@ INCLUDE_USER_CONTEXT = config.get('sentry_include_context', False)
 ERROR_LEVEL = config.get('sentry_error_level', 'WARNING')
 ODOO_MAJOR_VERSION = odoo.release.major_version
 ODOO_VERSION = odoo.release.version
-RELEASE = config.get('sentry_release', ODOO_VERSION)
+RELEASE = config.get('sentry_release', False)
 
 
 def get_user_context():
@@ -97,7 +97,7 @@ class ContextSentryHandler(SentryHandler):
         super(ContextSentryHandler, self).emit(rec)
 
 # Get default context and tags from the Odoo configuration
-tags = dict(odoo_major_version=ODOO_MAJOR_VERSION)
+tags = dict(odoo_major_version=ODOO_MAJOR_VERSION, odoo_version=ODOO_VERSION)
 context = dict()
 for key, value in config.options.iteritems():
     if key.startswith('sentry_context_tags_'):
@@ -105,8 +105,6 @@ for key, value in config.options.iteritems():
         continue
     elif key.startswith('sentry_context_'):
         context[key.replace('sentry_context_', '')] = value
-context = dict(context, tags=tags)
-context['odoo_version'] = ODOO_VERSION
 
 # Get options from the Odoo configuration
 options = {key.replace('sentry_options_', ''): value
@@ -115,6 +113,7 @@ options = {key.replace('sentry_options_', ''): value
 if RELEASE:
     options['release'] = RELEASE
 options['context'] = context
+options['tags'] = tags
 
 client = Client(CLIENT_DSN, **options)
 
