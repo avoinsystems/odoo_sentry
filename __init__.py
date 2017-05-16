@@ -45,6 +45,7 @@ ENABLE_LOGGING = config.get('sentry_enable_logging', False)
 ALLOW_ORM_WARNING = config.get('sentry_allow_orm_warning', False)
 INCLUDE_USER_CONTEXT = config.get('sentry_include_context', False)
 ERROR_LEVEL = config.get('sentry_error_level', 'WARNING')
+ODOO_MAJOR_VERSION = odoo.release.major_version
 ODOO_VERSION = odoo.release.version
 RELEASE = config.get('sentry_release', ODOO_VERSION)
 
@@ -95,10 +96,16 @@ class ContextSentryHandler(SentryHandler):
             client.extra_context(get_user_context())
         super(ContextSentryHandler, self).emit(rec)
 
-# Get default context from the Odoo configuration
-context = {key.replace('sentry_context_', ''): value
-           for key, value in config.options.iteritems()
-           if key.startswith('sentry_context_')}
+# Get default context and tags from the Odoo configuration
+tags = dict(odoo_major_version=ODOO_MAJOR_VERSION)
+context = dict()
+for key, value in config.options.iteritems():
+    if key.startswith('sentry_context_tags_'):
+        tags[key.replace('sentry_context_tags_', '')] = value
+        continue
+    elif key.startswith('sentry_context_'):
+        context[key.replace('sentry_context_', '')] = value
+context = dict(context, tags=tags)
 context['odoo_version'] = ODOO_VERSION
 
 # Get options from the Odoo configuration
