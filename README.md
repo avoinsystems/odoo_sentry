@@ -27,6 +27,12 @@ Other options are available to extends log level details ([odoo-sentry-sample.co
 - `sentry_allow_orm_warning`: *default `false`*. enabling this will capture Odoo's warning exceptions (e.g. `except_osv`, `openerp.exceptions.Warning`).
 - `sentry_include_context`: *default `false`*. this will add details about the odoo user that triggers specific event, plus database name, will displayed in Sentry additional info.
 - `sentry_error_level`: *default `warning`*. select the minimum logging level that should be propagated to Sentry.
+- `sentry_release`: *defaults to Odoo version`*. define your project's release here.
+
+You can also set other Raven options by defining `sentry_options_<option here>`, eg. `sentry_options_environment = production` 
+will tell Sentry the event came from the production environment.
+
+Additionally, you can set some default context values and tags using `sentry_context_<context here>` or `sentry_context_tags_<tag key here>`. For example `sentry_context_tags_build = 20170516` would send the tag `build` with the value `20170516`.
 
 ### License
 This project is licensed under [AGPL v3](http://www.gnu.org/licenses/agpl-3.0.html).

@@ -22,8 +22,8 @@
 
 {
     'name': 'Odoo Sentry connector',
-    'version': '1.0',
-    'author': 'Mohammed Barsi',
+    'version': '1.1.0',
+    'author': 'Mohammed Barsi, Avoin.Systems',
     'sequence': 4,
     'summary': 'Exceptions tracker',
     'description':
